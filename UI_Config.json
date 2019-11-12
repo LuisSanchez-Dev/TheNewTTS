@@ -1,0 +1,178 @@
+{
+  "output_file": "config.json",  
+  "donate":{
+    "type"    : "button",
+    "label"   : "☕  ☕  Buy the dev a coffee  ☕  ☕",
+    "tooltip" : "Keep the development of free scripts going buying the developer a coffee!",
+    "function": "donate",
+    "wsevent" : "",
+    "group"   : ""
+  },
+  "contact":{
+    "type"    : "button",
+    "label"   : "Want a custom script? Contact me!",
+    "tooltip" : "Click here to contact the script's developer luissanchezdev",
+    "function": "open_contact_me",
+    "wsevent" : "",
+    "group"   : ""
+  },  
+  "open_readme":{
+    "type"    : "button",
+    "label"   : "View readme",
+    "tooltip" : "Click here to view the script's documentation.",
+    "function": "open_readme",
+    "wsevent" : "",
+    "group"   : ""
+  },  
+  "read_all_text": {
+    "type"   : "checkbox",
+    "value"  : false,
+    "label"  : "Read ALL chat",
+    "tooltip": "Check this to read all chat disregarding the command.\nIF YOU ARE USING THIS FEATURE MAKE SURE TO SET A FAST SPEED SO THE CHATBOT CAN KEEP UP!",
+    "group"  : ""
+  },
+  "command": {
+    "type"   : "textbox",
+    "value"  : "!tts",
+    "label"  : "Command",
+    "tooltip": "Command for users to say something with TTS.",
+    "group"  : "Command configuration"
+  },
+  "permission": {
+    "type": "dropdown",
+    "value": "Everyone",
+    "items": ["Everyone","Regular","Subscriber","Moderator","Editor"],
+    "label": "Permission level",
+    "tooltip": "Set the permission level for the command",
+    "group": "Command configuration"
+  },
+  "cooldown": {
+    "type"   : "numberbox",
+    "value"  : 0,
+    "label"  : "Global cooldown (seconds)",
+    "tooltip": "Cooldown applied globally.",
+    "group"  : "Command configuration"
+  },
+  "user_cooldown": {
+    "type"   : "numberbox",
+    "value"  : 0,
+    "label"  : "User cooldown (seconds)",
+    "tooltip": "Cooldown applied for each user.",
+    "group"  : "Command configuration"
+  },
+  "cost": {
+    "type"   : "numberbox",
+    "value"  : 0,
+    "label"  : "Cost",
+    "tooltip": "Command cost",
+    "group"  : "Command configuration"
+  },
+  "msg_permission": {
+    "type"   : "textbox",
+    "value"  : "You don't have enough permissions to use this command.",
+    "label"  : "Permissions",
+    "tooltip": "Message shown when someone tries to issue the command without enough permissions.",
+    "group"  : "Command messages"
+  },
+  "msg_cooldown": {
+    "type"   : "textbox",
+    "value"  : "This command is still on cooldown!",
+    "label"  : "Cooldown",
+    "tooltip": "Message shown when someone tries to issue the command but it is still on cooldown.",
+    "group"  : "Command messages"
+  },
+  "msg_user_cooldown": {
+    "type"   : "textbox",
+    "value"  : "You need to wait before using this command again.",
+    "label"  : "User Cooldown",
+    "tooltip": "Message shown when someone tries to issue the command while they are on cooldown.",
+    "group"  : "Command messages"
+  },
+  "msg_cost": {
+    "type"   : "textbox",
+    "value"  : "You don't have enough money to use this command.",
+    "label"  : "Cost",
+    "tooltip": "Message shown when someone tries to issue the command without enough points.",
+    "group"  : "Command messages"
+  },
+  "lang": {
+    "type": "dropdown",
+    "label": "Language",
+    "value": "English (US) [en-US]",
+    "tooltip": "TTS Language",
+    "items": [
+      "Arabic [ar-XA]",
+      "Czech (Czech Republic) [cs-CZ]ar",
+      "Danish (Denmark) [da-DK]",
+      "Dutch (Netherlands) [nl-NL]",
+      "English (Australia) [en-AU]",
+      "English (India) [en-IN]",
+      "English (UK) [en-GB]",
+      "English (US) [en-US]",
+      "Filipino (Philippines) [fil-PH]",
+      "Finnish (Finland) [fi-FI]",
+      "French (Canada) [fr-CA]",
+      "French (France) [fr-FR]",
+      "German (Germany) [de-DE]",
+      "Greek (Greece) [el-GR]",
+      "Hindi (India) [hi-IN]",
+      "Hungarian (Hungary) [hu-HU]",
+      "Indonesian (Indonesia) [id-ID]",
+      "Italian (Italy) [it-IT]",
+      "Japanese (Japan) [ja-JP]",
+      "Korean (South Korea) [ko-KR]",
+      "Mandarin Chinese [cmn-CN]",
+      "Norwegian (Norway) [nb-NO]",
+      "Polish (Poland) [pl-PL]",
+      "Portuguese (Brazil) [pt-BR]",
+      "Portuguese (Portugal) [pt-PT]",
+      "Russian (Russia) [ru-RU]",
+      "Slovak (Slovakia) [sk-SK]",
+      "Spanish (Spain) [es-ES]",
+      "Spanish (Latin America) [es-MX]",
+      "Swedish (Sweden) [sv-SE]",
+      "Turkish (Turkey) [tr-TR]",
+      "Ukrainian (Ukraine) [uk-UA]",
+      "Vietnamese (Vietnam) [vi-VN]"
+    ],
+    "group": "TTS Configuration"
+  },
+  "pitch": {
+    "type": "slider",
+    "label": "% Pitch",
+    "value": 100,
+    "min": 50,
+    "max": 150,
+    "ticks": 5,
+    "tooltip": "Change default pitch of voice",
+    "group": "TTS Configuration"
+  },
+  "speed": {
+    "type": "slider",
+    "label": "% Speed",
+    "value": 100,
+    "min": 75,
+    "max": 250,
+    "ticks": 5,
+    "tooltip": "Change default speed of voice",
+    "group": "TTS Configuration"
+  },
+  "volume": {
+    "type": "slider",
+    "label": "Volume",
+    "value": 90,
+    "min": 15,
+    "max": 200,
+    "ticks": 5,
+    "tooltip": "Change volume",
+    "group": "TTS Configuration"
+  },
+  "clear_queue":{
+    "type"    : "button",
+    "label"   : "🗑️ Clear TTS queue 🗑️",
+    "tooltip" : "Clean the queue if a lot of texts are waiting to be spoken.",
+    "function": "clear_queue",
+    "wsevent" : "",
+    "group"   : "TTS Configuration"
+  }
+}
