@@ -25,8 +25,6 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 I have looked around for an easy to use and customizable text to speech script for Streamlabs Chatbot. The ones using the default voices installed in Windows sounded awful and other scripts weren't customizable enough.
 With this at hand, I took the time to build a better text to speech script for Streamlabs Chatbot that uses Google voices and is way more customizable and easy to use.
 
