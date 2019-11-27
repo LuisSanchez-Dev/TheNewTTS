@@ -47,6 +47,10 @@ last_check_period = 0
 #----------------------------------------------------#
 def Init():
   global SETTINGS, CONFIG_FILE
+  cache_folder = os.path.dirname(CACHE_MP3)
+  if not os.path.isdir(cache_folder):
+    os.mkdir(cache_folder)
+  
   to_remove = [CACHE_MP3, LOCK_FILE, FINISH_FILE, TEMP_MP3]
   for file in to_remove: os.popen('del "{0}"'.format(file))
   
