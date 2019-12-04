@@ -41,6 +41,7 @@ Why is it better?
   * Pitch - Custom pitch from super deep to extremely high pitched voice
   * Speed - Set your own talking speed from 75% to 250%
   * Volume - Volume separated from the Streamlabs Chatbot settings to meet your sound-fu requirements
+  * Max length - Prevent trolls from using long texts setting a limit in seconds to the TTS!
 
 Thanks to [@Tecno_Diana](https://www.twitch.tv/tecno_diana/) for coming up with the requirement.
 
