@@ -72,12 +72,14 @@ def Init():
       "lang": "English (US) [en-US]",
       "pitch": 100,
       "speed": 100,
-      "volume": 90
+      "volume": 90,
+      "length": 5
     }
   SETTINGS["lang"] = re.match(r"^.*\[(.+)\]", SETTINGS["lang"]).groups()[0]
   SETTINGS["pitch"] /= 100.0
   SETTINGS["speed"] /= 100.0
   SETTINGS["volume"] /= 100.0
+  if "length" not in SETTINGS: SETTINGS["length"] = 5
 
 #----------------------------------------------#
 #  [Required] Execute Data / Process messages  #
@@ -159,8 +161,9 @@ def filter_audio(file_path):
   
   commands = [
     'cd "'+PATH+'"',
-    'ffmpeg.exe -i "{0}" -af asetrate=24000*{1},atempo={2}/{1},aresample=48000,volume={3} "{4}" -y'.format(
-      file_path, SETTINGS["pitch"], SETTINGS["speed"], SETTINGS["volume"], TEMP_MP3
+    'ffmpeg.exe -t {length} -i "{0}" -af asetrate=24000*{1},atempo={2}/{1},aresample=48000,volume={3} "{4}" -y'.format(
+      file_path, SETTINGS["pitch"], SETTINGS["speed"], SETTINGS["volume"], TEMP_MP3,
+      length=SETTINGS["length"]
     ),
     'echo 1 > "' + FINISH_FILE + '"'
   ]

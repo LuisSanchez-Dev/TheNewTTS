@@ -167,6 +167,16 @@
     "tooltip": "Change volume",
     "group": "TTS Configuration"
   },
+  "length": {
+    "type": "slider",
+    "label": "Max length (seconds)",
+    "value": 5,
+    "min": 2,
+    "max": 20,
+    "ticks": 1,
+    "tooltip": "Limit the duration the TTS will be speaking.",
+    "group": "TTS Configuration"
+  },
   "clear_queue":{
     "type"    : "button",
     "label"   : "🗑️ Clear TTS queue 🗑️",
