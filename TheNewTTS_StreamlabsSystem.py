@@ -22,7 +22,7 @@ from System.Net import WebClient
 Description = "Text to speech with Google translate voice"
 ScriptName = "TheNewTTS"
 Creator = "LuisSanchezDev"
-Version = "1.0"
+Version = "1.2"
 Website = "https://www.fiverr.com/luissanchezdev"
 
 #---------------------------
