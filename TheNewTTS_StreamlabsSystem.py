@@ -9,6 +9,7 @@ import time
 import json
 import codecs
 import System
+
 from collections import deque
 
 clr.AddReference("System.Web")
@@ -34,10 +35,12 @@ CACHE_MP3 = os.path.join(PATH,"cache","tts.mp3")
 LOCK_FILE = os.path.join(PATH,"cache","lock")
 FINISH_FILE = os.path.join(PATH,"cache","finished")
 CONFIG_FILE = os.path.join(PATH,"config.json")
+BLACKLIST_FILE = os.path.join(PATH,"blacklist.db")
 
-global SETTINGS, TEXTS_QUEUE
+global SETTINGS, TEXTS_QUEUE, BLACKLIST
 SETTINGS = {}
 TEXTS_QUEUE = deque()
+BLACKLIST = None
 
 global last_check_period
 last_check_period = 0
@@ -46,7 +49,7 @@ last_check_period = 0
 #  [Required] Initialize Data (Only called on load)  #
 #----------------------------------------------------#
 def Init():
-  global SETTINGS, CONFIG_FILE
+  global SETTINGS, CONFIG_FILE, BLACKLIST_FILE, BLACKLIST
   cache_folder = os.path.dirname(CACHE_MP3)
   if not os.path.isdir(cache_folder):
     os.mkdir(cache_folder)
@@ -73,25 +76,67 @@ def Init():
       "pitch": 100,
       "speed": 100,
       "volume": 90,
-      "length": 5
+      "length": 5,
+      "cmd_ban": "!ttsban",
+      "cmd_unban": "!ttsunban",
+      "blacklist_permission": "Caster"
     }
   SETTINGS["lang"] = re.match(r"^.*\[(.+)\]", SETTINGS["lang"]).groups()[0]
   SETTINGS["pitch"] /= 100.0
   SETTINGS["speed"] /= 100.0
   SETTINGS["volume"] /= 100.0
+  
+  # config.json backwards compatibility
+  # Max tts length added
   if "length" not in SETTINGS: SETTINGS["length"] = 5
+
+  # Blacklisting added
+  if "cmd_ban" not in SETTINGS: SETTINGS["cmd_ban"] = "!ttsban"
+  if "cmd_unban" not in SETTINGS: SETTINGS["cmd_unban"] = "!ttsunban"
+  if "blacklist_permission" not in SETTINGS: SETTINGS["blacklist_permission"] = "Caster"
+
+  BLACKLIST = Blacklist(BLACKLIST_FILE)
 
 #----------------------------------------------#
 #  [Required] Execute Data / Process messages  #
 #----------------------------------------------#
 def Execute(data):
   if data.IsChatMessage():
+    command = data.GetParam(0)
+    if Parent.HasPermission(data.User, SETTINGS["blacklist_permission"], ""):
+      target = data.GetParam(1)
+      if command == SETTINGS["cmd_ban"]:
+        if data.GetParamCount() != 2:
+          Parent.SendStreamMessage("Usage: {0} <username>".format(SETTINGS["cmd_ban"]))
+          return
+        
+        if BLACKLIST.add_user(target):
+          Parent.SendStreamMessage(target + " successfully blacklisted!")
+        else:
+          Parent.SendStreamMessage(target + " already blacklisted!")          
+        return
+      elif command == SETTINGS["cmd_unban"]:
+        if data.GetParamCount() != 2:
+          Parent.SendStreamMessage("Usage: {0} <username>".format(SETTINGS["cmd_unban"]))
+          return
+        
+        if BLACKLIST.remove_user(target):
+          Parent.SendStreamMessage(target + " removed from blacklist!")
+        else:
+          Parent.SendStreamMessage(target + " was not blacklisted!")
+        return
+        
+
     if SETTINGS["read_all_text"]:
-      TEXTS_QUEUE.append(data.Message)
+      if not BLACKLIST.is_user_blacklisted(data.User):
+        TEXTS_QUEUE.append(data.Message)
       return
-    elif data.GetParam(0) == SETTINGS["command"]:
-      if not Parent.HasPermission(data.User, SETTINGS["permission"], ""):
+    elif command == SETTINGS["command"]:
+      if  not Parent.HasPermission(data.User, SETTINGS["permission"], ""):
         Parent.SendStreamMessage(SETTINGS["msg_permission"])
+        return
+      if BLACKLIST.is_user_blacklisted(data.User):
+        Parent.SendStreamMessage(data.User + " is blacklisted!")
         return
       if SETTINGS["user_cooldown"] and Parent.GetUserCooldownDuration(ScriptName, SETTINGS["command"], data.User):
         Parent.SendStreamMessage(SETTINGS["msg_user_cooldown"])
@@ -190,6 +235,45 @@ def download_tts(file_path,text):
 def clear_queue():
   global TEXTS_QUEUE
   while len(TEXTS_QUEUE) > 0: TEXTS_QUEUE.pop()
+
+class Blacklist:
+  def __init__(self, file_path):
+    self._path = file_path
+  def add_user(self, user_name):
+    user_name = Blacklist._strip_username(user_name)
+    if self.is_user_blacklisted(user_name): return False
+    db = self._load()
+    db.append(user_name)
+    self._save(db)
+    return True
+  
+  def remove_user(self, user_name):
+    user_name = Blacklist._strip_username(user_name)
+    if not self.is_user_blacklisted(user_name): return False
+    db = self._load()
+    db.remove(user_name)
+    self._save(db)
+    return True
+
+  def is_user_blacklisted(self, user_name):
+    user_name = Blacklist._strip_username(user_name)
+    if user_name in self._load(): return True
+    return False
+
+  def _load(self):
+    if not os.path.isfile(self._path): return []
+    with codecs.open(self._path, encoding="utf-8-sig", mode='r') as file:
+      return json.load(file, encoding="utf-8-sig")
+  def _save(self, modified_db):
+    with codecs.open(self._path, encoding="utf-8-sig", mode='w') as file:
+      file.write(json.dumps(modified_db, encoding="utf-8-sig"))
+  @staticmethod
+  def _strip_username(user_name):
+    user_name = user_name.lower()
+    if "@" in user_name:
+      user_name = user_name.replace("@","")
+    return user_name
+
 
 #-------------------------------#
 #  [TheNewTTS] UI Link buttons  #

@@ -36,6 +36,11 @@ Why is it better?
   * Permission - Should everyone use the command? Regulars? Subs? you pick!
   * Cost - Set a cost for your command and spend Streamlabs Chatbot currency
 * Don't want to use commands? Enable ✔️*Read ALL chat* and read your entire chat!
+* Blacklist is included to block trolls and other bots such as *StreamElements*, *Nightbot*, etc. It includes:
+  * A command to blacklist a user (Default) `!ttsban username`
+  * A command to un-blacklist a user (Default) `!ttsunban username`
+  * Configurable permission to allow your Editors/Moderators blacklist for you!
+  * Works in both *Command* mode and *Read ALL chat* mode
 * Make the voice unique with these configurations:
   * Language - Choose between 33 languages
   * Pitch - Custom pitch from super deep to extremely high pitched voice

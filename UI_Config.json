@@ -95,6 +95,28 @@
     "tooltip": "Message shown when someone tries to issue the command without enough points.",
     "group"  : "Command messages"
   },
+  "cmd_ban": {
+    "type"   : "textbox",
+    "value"  : "!ttsban",
+    "label"  : "Add user to blacklist command",
+    "tooltip": "Use this command to add an user to the blacklist",
+    "group"  : "Blacklist Configuration"
+  },
+  "cmd_unban": {
+    "type"   : "textbox",
+    "value"  : "!ttsunban",
+    "label"  : "Remove user from blacklist command",
+    "tooltip": "Use this command to remove an user from the blacklist",
+    "group"  : "Blacklist Configuration"
+  },
+  "blacklist_permission": {
+    "type": "dropdown",
+    "value": "Caster",
+    "items": ["Moderator","Editor","Caster"],
+    "label": "Blacklist permission",
+    "tooltip": "Allow these users to blacklist/unblacklist people",
+    "group": "Blacklist Configuration"
+  },
   "lang": {
     "type": "dropdown",
     "label": "Language",
