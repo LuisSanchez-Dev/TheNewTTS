@@ -22,7 +22,7 @@ from System.Net import WebClient
 Description = "Text to speech with Google translate voice"
 ScriptName = "TheNewTTS"
 Creator = "LuisSanchezDev"
-Version = "1.2"
+Version = "1.2.1"
 Website = "https://www.fiverr.com/luissanchezdev"
 
 #---------------------------
@@ -128,14 +128,14 @@ def Execute(data):
         
 
     if SETTINGS["read_all_text"]:
-      if not BLACKLIST.is_user_blacklisted(data.User):
+      if not BLACKLIST.is_user_blacklisted(data.UserName):
         TEXTS_QUEUE.append(data.Message)
       return
     elif command == SETTINGS["command"]:
       if  not Parent.HasPermission(data.User, SETTINGS["permission"], ""):
         Parent.SendStreamMessage(SETTINGS["msg_permission"])
         return
-      if BLACKLIST.is_user_blacklisted(data.User):
+      if BLACKLIST.is_user_blacklisted(data.UserName):
         Parent.SendStreamMessage(data.User + " is blacklisted!")
         return
       if SETTINGS["user_cooldown"] and Parent.GetUserCooldownDuration(ScriptName, SETTINGS["command"], data.User):
