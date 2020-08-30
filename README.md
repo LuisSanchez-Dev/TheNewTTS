@@ -22,6 +22,7 @@
   * [Installation](#installation)
 * [Usage](#usage)
 * [Contact](#contact)
+* [License](#license)
 
 ## About The Project
 
@@ -36,6 +37,8 @@ Why is it better?
   * Permission - Should everyone use the command? Regulars? Subs? you pick!
   * Cost - Set a cost for your command and spend Streamlabs Chatbot currency
 * Don't want to use commands? Enable ✔️*Read ALL chat* and read your entire chat!
+* _Who said that?_ You can enable the say username option to know who is talking!
+* Troll spammed? Just skip that message!
 * Blacklist is included to block trolls and other bots such as *StreamElements*, *Nightbot*, etc. It includes:
   * A command to blacklist a user (Default) `!ttsban username`
   * A command to un-blacklist a user (Default) `!ttsunban username`
@@ -81,6 +84,11 @@ After installing you can send the following chat message to hear the result:
 ```
 !tts Hello world, this must be working now!
 ```
+
+If someone trolls with an ugly message:
+```
+!ttskip
+```
 You can go to the configuration pane as specified in the installation to change the configuration for the command and for the text to speech voice.
 
 ## Contact
@@ -91,3 +99,8 @@ You can go to the configuration pane as specified in the installation to change 
 * luis.sanchez.dev@hotmail.com
 
 Remember to join the [Streamlabs Chatbot Discord server](https://discordapp.com/invite/S2d4KGg) for sfx, scripts, commands and a lot more!
+
+
+## License
+Licensed under GPL v3
+Copyright (C) 2020 Luis Sanchez

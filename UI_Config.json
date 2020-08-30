@@ -16,6 +16,14 @@
     "wsevent" : "",
     "group"   : ""
   },  
+  "emotes":{
+    "type"    : "button",
+    "label"   : "🎨 Twitch emotes, sub badges, channel points image and logos\nby Tecno_Diana",
+    "tooltip" : "Click here to contact Tecno_Diana for Twitch emotes!",
+    "function": "open_contact_td",
+    "wsevent" : "",
+    "group"   : ""
+  }, 
   "open_readme":{
     "type"    : "button",
     "label"   : "View readme",
@@ -29,6 +37,20 @@
     "value"  : false,
     "label"  : "Read ALL chat",
     "tooltip": "Check this to read all chat disregarding the command.\nIF YOU ARE USING THIS FEATURE MAKE SURE TO SET A FAST SPEED SO THE CHATBOT CAN KEEP UP!",
+    "group"  : ""
+  },
+  "say_username": {
+    "type"   : "checkbox",
+    "value"  : true,
+    "label"  : "Say username before message",
+    "tooltip": "Check this to say the username before the message",
+    "group"  : ""
+  },
+  "say_after_username": {
+    "type"   : "textbox",
+    "value"  : "says",
+    "label"  : "⚠REMEMBER TO SAVE THE SETTINGS⚠\n\nSay this after the username",
+    "tooltip": "Append this text to the username so the TTS makes more sense",
     "group"  : ""
   },
   "command": {
@@ -95,27 +117,34 @@
     "tooltip": "Message shown when someone tries to issue the command without enough points.",
     "group"  : "Command messages"
   },
+  "cmd_skip": {
+    "type"   : "textbox",
+    "value"  : "!ttskip",
+    "label"  : "Skip currently playing text command",
+    "tooltip": "Use this command to skip the currently playing text in case of a troll",
+    "group"  : "Moderator Configuration"
+  },
   "cmd_ban": {
     "type"   : "textbox",
     "value"  : "!ttsban",
     "label"  : "Add user to blacklist command",
     "tooltip": "Use this command to add an user to the blacklist",
-    "group"  : "Blacklist Configuration"
+    "group"  : "Moderator Configuration"
   },
   "cmd_unban": {
     "type"   : "textbox",
     "value"  : "!ttsunban",
     "label"  : "Remove user from blacklist command",
     "tooltip": "Use this command to remove an user from the blacklist",
-    "group"  : "Blacklist Configuration"
+    "group"  : "Moderator Configuration"
   },
-  "blacklist_permission": {
+  "moderator_permission": {
     "type": "dropdown",
     "value": "Caster",
     "items": ["Moderator","Editor","Caster"],
-    "label": "Blacklist permission",
+    "label": "Moderator permission",
     "tooltip": "Allow these users to blacklist/unblacklist people",
-    "group": "Blacklist Configuration"
+    "group": "Moderator Configuration"
   },
   "lang": {
     "type": "dropdown",
@@ -194,17 +223,9 @@
     "label": "Max length (seconds)",
     "value": 5,
     "min": 2,
-    "max": 20,
+    "max": 60,
     "ticks": 1,
     "tooltip": "Limit the duration the TTS will be speaking.",
     "group": "TTS Configuration"
-  },
-  "clear_queue":{
-    "type"    : "button",
-    "label"   : "🗑️ Clear TTS queue 🗑️",
-    "tooltip" : "Clean the queue if a lot of texts are waiting to be spoken.",
-    "function": "clear_queue",
-    "wsevent" : "",
-    "group"   : "TTS Configuration"
   }
 }

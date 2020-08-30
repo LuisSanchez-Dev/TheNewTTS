@@ -1,6 +1,19 @@
-#--------------------#
-#  Import Libraries  #
-#--------------------#
+# TheNewTTS script for Streamlabs Chatbot
+# Copyright (C) 2020 Luis Sanchez
+#
+# Versions:
+#   - 2.0.0 08/29/2020 -
+#       Added a say username before message option
+#       Added a skip command
+#       Fixed sometimes skipping messages
+#       Fixed script stopped working suddenly  
+#   - 1.2.1 12/09/2019 - Fixed Youtube/Mixer blacklist comparison against user ID instead of username
+#   - 1.2.0 12/08/2019 - Added blacklist
+#   - 1.1.0 12/03/2019 - Added max length in seconds
+#   - 1.0.1 11/27/2019 - Fixed sound not playing
+#   - 1.0.0 11/12/2019 - Initial release
+
+# [Required] Import Libraries  #
 import re
 import os
 import sys
@@ -8,61 +21,56 @@ import clr
 import time
 import json
 import codecs
-import System
 
-from collections import deque
+# Add script's folder to path to be able to find the other modules
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+from tts_media import Media_Manager, run_cmd
 
-clr.AddReference("System.Web")
-from System.Web import HttpUtility
-from System.Net import WebClient
-
-#---------------------------------#
-#  [Required] Script Information  #
-#---------------------------------#
+# [Required] Script Information  #
 Description = "Text to speech with Google translate voice"
 ScriptName = "TheNewTTS"
 Creator = "LuisSanchezDev"
 Version = "1.2.1"
 Website = "https://www.fiverr.com/luissanchezdev"
 
-#---------------------------
-#  Define Global Variables
-#---------------------------
-global PATH, TEMP_MP3, CACHE_MP3, LOCK_FILE, FINISH_FILE, CONFIG_FILE
+# Define Global Variables
+global PATH,CONFIG_FILE, BLACKLIST_FILE
 PATH = os.path.dirname(os.path.realpath(__file__))
-TEMP_MP3 = os.path.join(PATH,"cache","tts2.mp3")
-CACHE_MP3 = os.path.join(PATH,"cache","tts.mp3")
-LOCK_FILE = os.path.join(PATH,"cache","lock")
-FINISH_FILE = os.path.join(PATH,"cache","finished")
 CONFIG_FILE = os.path.join(PATH,"config.json")
 BLACKLIST_FILE = os.path.join(PATH,"blacklist.db")
+MAX_CHARACTERS_ALLOWED = 200
 
-global SETTINGS, TEXTS_QUEUE, BLACKLIST
+global SETTINGS, MEDIA_MGR, BLACKLIST
 SETTINGS = {}
-TEXTS_QUEUE = deque()
+MEDIA_MGR = None
 BLACKLIST = None
 
-global last_check_period
-last_check_period = 0
-
-#----------------------------------------------------#
-#  [Required] Initialize Data (Only called on load)  #
-#----------------------------------------------------#
+# [Required] Initialize Data (Only called on load)  #
 def Init():
-  global SETTINGS, CONFIG_FILE, BLACKLIST_FILE, BLACKLIST
-  cache_folder = os.path.dirname(CACHE_MP3)
-  if not os.path.isdir(cache_folder):
+  global SETTINGS, PATH, CONFIG_FILE, BLACKLIST_FILE, BLACKLIST, MEDIA_MGR
+  cache_folder = os.path.join(PATH, "cache")
+  def ensure_cache_dir():
+    if os.path.isdir(cache_folder):
+      Parent.Log("TTS", "Deleting folder!")
+      # os.system('RMDIR /Q/S "{0}"'.format(cache_folder))
+      run_cmd('RMDIR /Q/S "{0}"'.format(cache_folder))
     os.mkdir(cache_folder)
-  
-  to_remove = [CACHE_MP3, LOCK_FILE, FINISH_FILE, TEMP_MP3]
-  for file in to_remove: os.popen('del "{0}"'.format(file))
-  
+  Parent.Log("TTS", "Deleting folder")
+  while True:
+    try:
+      ensure_cache_dir()
+      break
+    except:
+      continue
+
   try:
     with codecs.open(CONFIG_FILE, encoding="utf-8-sig", mode='r') as file:
       SETTINGS = json.load(file, encoding="utf-8-sig")
   except:
     SETTINGS = {
       "read_all_text": False,
+      "say_username": True,
+      "say_after_username": "says",
       "command": "!tts",
       "permission": "Everyone",
       "cooldown": 0,
@@ -79,12 +87,15 @@ def Init():
       "length": 5,
       "cmd_ban": "!ttsban",
       "cmd_unban": "!ttsunban",
-      "blacklist_permission": "Caster"
+      "moderator_permission": "Caster",
+      "cmd_skip": "!ttskip"
     }
   SETTINGS["lang"] = re.match(r"^.*\[(.+)\]", SETTINGS["lang"]).groups()[0]
   SETTINGS["pitch"] /= 100.0
   SETTINGS["speed"] /= 100.0
   SETTINGS["volume"] /= 100.0
+  SETTINGS["_path"] = PATH
+  SETTINGS["_cache"] = cache_folder
   
   # config.json backwards compatibility
   # Max tts length added
@@ -93,19 +104,29 @@ def Init():
   # Blacklisting added
   if "cmd_ban" not in SETTINGS: SETTINGS["cmd_ban"] = "!ttsban"
   if "cmd_unban" not in SETTINGS: SETTINGS["cmd_unban"] = "!ttsunban"
-  if "blacklist_permission" not in SETTINGS: SETTINGS["blacklist_permission"] = "Caster"
 
+  # Moderator commands added
+  if "moderator_permission" not in SETTINGS: SETTINGS["moderator_permission"] = "Caster"
+  if "cmd_skip" not in SETTINGS: SETTINGS["cmd_skip"] = "!ttskip"
+
+  # Say username added
+  if "say_username" not in SETTINGS: SETTINGS["say_username"] = True
+  if "say_after_username" not in SETTINGS: SETTINGS["say_after_username"] = "says"
+  
   BLACKLIST = Blacklist(BLACKLIST_FILE)
+  MEDIA_MGR = Media_Manager(SETTINGS)
 
-#----------------------------------------------#
-#  [Required] Execute Data / Process messages  #
-#----------------------------------------------#
+# [Required] Execute Data / Process messages  #
 def Execute(data):
+  global SETTINGS, MEDIA_MGR
   if data.IsChatMessage():
     command = data.GetParam(0)
-    if Parent.HasPermission(data.User, SETTINGS["blacklist_permission"], ""):
+    if Parent.HasPermission(data.User, SETTINGS["moderator_permission"], ""):
       target = data.GetParam(1)
-      if command == SETTINGS["cmd_ban"]:
+      if command == SETTINGS["cmd_skip"]:
+        MEDIA_MGR.skip()
+        return
+      elif command == SETTINGS["cmd_ban"]:
         if data.GetParamCount() != 2:
           Parent.SendStreamMessage("Usage: {0} <username>".format(SETTINGS["cmd_ban"]))
           return
@@ -129,7 +150,13 @@ def Execute(data):
 
     if SETTINGS["read_all_text"]:
       if not BLACKLIST.is_user_blacklisted(data.UserName):
-        TEXTS_QUEUE.append(data.Message)
+        text = data.Message
+        if len(text) > MAX_CHARACTERS_ALLOWED:
+          MEDIA_MGR.append(data.UserName + "'s message was too long")
+        else:
+          if SETTINGS["say_username"]:
+            MEDIA_MGR.append(data.UserName + " " + SETTINGS["say_after_username"])
+          MEDIA_MGR.append(text)
       return
     elif command == SETTINGS["command"]:
       if  not Parent.HasPermission(data.User, SETTINGS["permission"], ""):
@@ -150,91 +177,40 @@ def Execute(data):
       if not data.GetParam(1):
         Parent.SendStreamMessage("You need to specify a message")
         return
-      text = ' '.join(data.Message.split(' ')[1:])
-      TEXTS_QUEUE.append(text)
+      text = " ".join(data.Message.split(' ')[1:])
+      if len(text) > MAX_CHARACTERS_ALLOWED:
+        Parent.AddPoints(data.User, data.UserName, SETTINGS["cost"])
+        Parent.SendStreamMessage("Can't read message because the text istoo long!")
+        return
+      else:
+        if SETTINGS["say_username"]:
+          MEDIA_MGR.append(data.UserName + " " + SETTINGS["say_after_username"])
+        MEDIA_MGR.append(text)
       Parent.AddCooldown(ScriptName, SETTINGS["command"], SETTINGS["cooldown"])
       Parent.AddUserCooldown(ScriptName, SETTINGS["command"], data.User, SETTINGS["user_cooldown"])
       return
 
-#----------------------------------------------------------------------------------------------------#
-#   [Required] Tick method (Gets called during every iteration even when there is no incoming data)  #
-#----------------------------------------------------------------------------------------------------#
+# [Required] Tick method (Gets called during every iteration even when there is no incoming data)  #
 def Tick():
-  global LOCK_FILE, FINISH_FILE, last_check_period
-  if time.time() - last_check_period >= 0.25:
-    try:
-      last_check_period = time.time()
-      if os.path.isfile(LOCK_FILE) or os.path.isfile(FINISH_FILE):
-        if os.path.isfile(FINISH_FILE):
-          os.popen('del "{0}" & del "{1}"'.format(
-            LOCK_FILE, FINISH_FILE
-          ))
-          os.remove(CACHE_MP3)
-          os.rename(TEMP_MP3, CACHE_MP3)
-          Parent.PlaySound(CACHE_MP3, 100)
-          TEXTS_QUEUE.popleft()
-          return
-        else:
-          return
-      if os.path.isfile(CACHE_MP3):
-        os.popen('del "{0}"'.format(CACHE_MP3))
-        last_check_period = time.time()
-        return
-      if len(TEXTS_QUEUE) > 0:
-        text = TEXTS_QUEUE[0]
-        download_tts(CACHE_MP3, text)
-        filter_audio(CACHE_MP3)
-    except Exception as e:
-      Parent.Log(ScriptName, "Please report this to the github page.\nERROR: " + str(e))
-    return
+  pass
 
-#-----------------------------------------------------------------------------------------------------#
-#  [Optional] Reload Settings (Called when a user clicks the Save Settings button in the Chatbot UI)  #
-#-----------------------------------------------------------------------------------------------------#
+# [Optional] Reload Settings (Called when a user clicks the Save Settings button in the Chatbot UI)  #
 def ReloadSettings(jsonData):
-  global SETTINGS, TEXTS_QUEUE
+  global MEDIA_MGR
+  Unload()
   Init()
-  clear_queue()
-  TEXTS_QUEUE.append("Configuration updated successfuly") 
+  MEDIA_MGR.append("Configuration updated successfully")
 
-#-----------------------------------------------------------------------#
-#  [TheNewTTS] Changes the pitch, speed and volume of downloaded mp3  #
-#-----------------------------------------------------------------------#
-def filter_audio(file_path):
-  global SETTINGS, PATH, LOCK_FILE, FINISH_FILE, TEMP_MP3
-  with open(LOCK_FILE,"w") as f: f.write(" ")
-  
-  commands = [
-    'cd "'+PATH+'"',
-    'ffmpeg.exe -t {length} -i "{0}" -af asetrate=24000*{1},atempo={2}/{1},aresample=48000,volume={3} "{4}" -y'.format(
-      file_path, SETTINGS["pitch"], SETTINGS["speed"], SETTINGS["volume"], TEMP_MP3,
-      length=SETTINGS["length"]
-    ),
-    'echo 1 > "' + FINISH_FILE + '"'
-  ]
-  os.popen(" & ".join(commands))
-  return
+# Unload (Called when a user reloads their scripts or closes the bot / cleanup stuff)
+def Unload():
+  global MEDIA_MGR
+  if MEDIA_MGR:
+    # Parent.Log("TTS", "Closing media manager")
+    MEDIA_MGR.close()
+    del MEDIA_MGR
+    # Parent.Log("TTS", "Media manager closed!")
+    # MEDIA_MGR = None
 
-#-----------------------------------------------------------------------------------------#
-#  [TheNewTTS] Download from Google Translate voice generator using defined TTS language  #
-#-----------------------------------------------------------------------------------------#
-def download_tts(file_path,text):
-  global SETTINGS
-  with WebClient() as wc:
-    url = "https://translate.google.com/translate_tts?ie=UTF-8&q={0}&tl={1}&client=tw-ob".format(
-      HttpUtility.UrlEncode(text), SETTINGS["lang"]
-    )
-    wc.Headers["Referer"] = "http://translate.google.com/"
-    wc.Headers["User-Agent"] = "stagefright/1.2 (Linux;Android 5.0)"
-    wc.DownloadFile(url,file_path)
-    return
-
-#---------------------------#
-#  [TheNewTTS] Clear queue  #
-#---------------------------#
-def clear_queue():
-  global TEXTS_QUEUE
-  while len(TEXTS_QUEUE) > 0: TEXTS_QUEUE.pop()
 
 class Blacklist:
   def __init__(self, file_path):
@@ -275,12 +251,12 @@ class Blacklist:
     return user_name
 
 
-#-------------------------------#
-#  [TheNewTTS] UI Link buttons  #
-#-------------------------------#
+# [TheNewTTS] UI Link buttons  #
 def donate():
   os.startfile("https://streamlabs.com/luissanchezdev/tip")
 def open_contact_me():
   os.startfile("www.fiverr.com/luissanchezdev/makea-custom-streamlabs-chatbot-script")
+def open_contact_td():
+  os.startfile("https://www.fiverr.com/tecno_diana/make-cute-twich-emote-for-your-stream")
 def open_readme():
   os.startfile("https://github.com/LuisSanchez-Dev/TheNewTTS")
