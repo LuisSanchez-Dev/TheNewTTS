@@ -4,7 +4,7 @@
   <h1 align="center">TheNewTTS</h1>
 
   <p align="center">
-    The best Chat to Speech for Twitch, Mixer and Youtube streams for Streamlabs Chatbot
+    The best Text to Speech (TTS) for Twitch, Mixer and Youtube streams for Streamlabs Chatbot
     <br />
     <a href="https://github.com/LuisSanchez-Dev/TheNewTTS/archive/master.zip">Download</a>
     ·
