@@ -2,6 +2,11 @@
 # Copyright (C) 2020 Luis Sanchez
 #
 # Versions:
+#   - 2.1.0 10/05/2020 -
+#       Added a clean repeated words/emotes option
+#       Added a clean repeated letters option
+#       Added a clean and replace links option
+#       Added a ignore messages starting with a character option
 #   - 2.0.0 08/29/2020 -
 #       Added a say username before message option
 #       Added a skip command
@@ -69,8 +74,13 @@ def Init():
   except:
     SETTINGS = {
       "read_all_text": False,
+      "clean_repeated_words": True,
+      "clean_repeated_letters": True,
+      "clean_urls": True,
+      "url_replacement": "link removed",
       "say_username": True,
       "say_after_username": "says",
+      "ignore_starting_with": "!",
       "command": "!tts",
       "permission": "Everyone",
       "cooldown": 0,
@@ -113,6 +123,16 @@ def Init():
   if "say_username" not in SETTINGS: SETTINGS["say_username"] = True
   if "say_after_username" not in SETTINGS: SETTINGS["say_after_username"] = "says"
   
+  # Ignore starting with added
+  if "ignore_starting_with" not in  SETTINGS: SETTINGS["ignore_starting_with"] = "!"
+  
+  # Clean words/letters/urls added
+  if "clean_repeated_words" not in SETTINGS: SETTINGS["clean_repeated_words"] = True
+  if "clean_repeated_letters" not in SETTINGS: SETTINGS["clean_repeated_letters"] = True
+  if "clean_urls" not in SETTINGS: SETTINGS["clean_urls"] = True
+  if "url_replacement" not in SETTINGS: SETTINGS["url_replacement"] = "link removed"
+
+
   BLACKLIST = Blacklist(BLACKLIST_FILE)
   MEDIA_MGR = Media_Manager(SETTINGS)
 
@@ -147,16 +167,25 @@ def Execute(data):
           Parent.SendStreamMessage(target + " was not blacklisted!")
         return
         
-
+    text = data.Message
+    if SETTINGS["clean_repeated_words"]:
+      text = clean_repeated_words(text)
+    if SETTINGS["clean_repeated_letters"]:
+      text = clean_repeated_letters(text)
+    if SETTINGS["clean_urls"]:
+      text = clean_urls(text)
+    
     if SETTINGS["read_all_text"]:
-      if not BLACKLIST.is_user_blacklisted(data.UserName):
-        text = data.Message
-        if len(text) > MAX_CHARACTERS_ALLOWED:
-          MEDIA_MGR.append(data.UserName + "'s message was too long")
-        else:
-          if SETTINGS["say_username"]:
-            MEDIA_MGR.append(data.UserName + " " + SETTINGS["say_after_username"])
-          MEDIA_MGR.append(text)
+      if BLACKLIST.is_user_blacklisted(data.UserName):
+        return
+      if text[0] == SETTINGS["ignore_starting_with"]:
+        return
+      if len(text) > MAX_CHARACTERS_ALLOWED:
+        MEDIA_MGR.append(data.UserName + "'s message was too long")
+      else:
+        if SETTINGS["say_username"]:
+          MEDIA_MGR.append(data.UserName + " " + SETTINGS["say_after_username"])
+        MEDIA_MGR.append(text)
       return
     elif command == SETTINGS["command"]:
       if  not Parent.HasPermission(data.User, SETTINGS["permission"], ""):
@@ -177,7 +206,7 @@ def Execute(data):
       if not data.GetParam(1):
         Parent.SendStreamMessage("You need to specify a message")
         return
-      text = " ".join(data.Message.split(' ')[1:])
+      text = " ".join(text.split(' ')[1:])
       if len(text) > MAX_CHARACTERS_ALLOWED:
         Parent.AddPoints(data.User, data.UserName, SETTINGS["cost"])
         Parent.SendStreamMessage("Can't read message because the text istoo long!")
@@ -250,6 +279,27 @@ class Blacklist:
       user_name = user_name.replace("@","")
     return user_name
 
+def clean_repeated_words(text):
+  text = text.replace(":", " ")
+  text = re.sub(r'\s+', " ", text).strip()
+  words = text.split(" ")
+  output_text = []
+  last_word = ""
+  for word in words:
+    if word.lower() != last_word.lower():
+      output_text.append(word)
+      last_word = word
+  return " ".join(output_text)
+
+def clean_repeated_letters(text):
+  return re.sub(r'(.)\1{2,}', r'\1', text)
+
+def clean_urls(text):
+  global SETTINGS
+  PATTERN = r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
+  text = re.sub(PATTERN, SETTINGS["url_replacement"], text)
+  text = re.sub('https?', "", text)
+  return text
 
 # [TheNewTTS] UI Link buttons  #
 def donate():

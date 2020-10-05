@@ -1,231 +1,276 @@
 {
-  "output_file": "config.json",  
-  "donate":{
-    "type"    : "button",
-    "label"   : "☕  ☕  Buy the dev a coffee  ☕  ☕",
-    "tooltip" : "Keep the development of free scripts going buying the developer a coffee!",
-    "function": "donate",
-    "wsevent" : "",
-    "group"   : ""
-  },
-  "contact":{
-    "type"    : "button",
-    "label"   : "Want a custom script? Contact me!",
-    "tooltip" : "Click here to contact the script's developer luissanchezdev",
-    "function": "open_contact_me",
-    "wsevent" : "",
-    "group"   : ""
-  },  
-  "emotes":{
-    "type"    : "button",
-    "label"   : "🎨 Twitch emotes, sub badges, channel points image and logos\nby Tecno_Diana",
-    "tooltip" : "Click here to contact Tecno_Diana for Twitch emotes!",
-    "function": "open_contact_td",
-    "wsevent" : "",
-    "group"   : ""
-  }, 
-  "open_readme":{
-    "type"    : "button",
-    "label"   : "View readme",
-    "tooltip" : "Click here to view the script's documentation.",
-    "function": "open_readme",
-    "wsevent" : "",
-    "group"   : ""
-  },  
-  "read_all_text": {
-    "type"   : "checkbox",
-    "value"  : false,
-    "label"  : "Read ALL chat",
-    "tooltip": "Check this to read all chat disregarding the command.\nIF YOU ARE USING THIS FEATURE MAKE SURE TO SET A FAST SPEED SO THE CHATBOT CAN KEEP UP!",
-    "group"  : ""
-  },
-  "say_username": {
-    "type"   : "checkbox",
-    "value"  : true,
-    "label"  : "Say username before message",
-    "tooltip": "Check this to say the username before the message",
-    "group"  : ""
-  },
-  "say_after_username": {
-    "type"   : "textbox",
-    "value"  : "says",
-    "label"  : "⚠REMEMBER TO SAVE THE SETTINGS⚠\n\nSay this after the username",
-    "tooltip": "Append this text to the username so the TTS makes more sense",
-    "group"  : ""
-  },
-  "command": {
-    "type"   : "textbox",
-    "value"  : "!tts",
-    "label"  : "Command",
-    "tooltip": "Command for users to say something with TTS.",
-    "group"  : "Command configuration"
-  },
-  "permission": {
-    "type": "dropdown",
-    "value": "Everyone",
-    "items": ["Everyone","Regular","Subscriber","Moderator","Editor"],
-    "label": "Permission level",
-    "tooltip": "Set the permission level for the command",
-    "group": "Command configuration"
-  },
-  "cooldown": {
-    "type"   : "numberbox",
-    "value"  : 0,
-    "label"  : "Global cooldown (seconds)",
-    "tooltip": "Cooldown applied globally.",
-    "group"  : "Command configuration"
-  },
-  "user_cooldown": {
-    "type"   : "numberbox",
-    "value"  : 0,
-    "label"  : "User cooldown (seconds)",
-    "tooltip": "Cooldown applied for each user.",
-    "group"  : "Command configuration"
-  },
-  "cost": {
-    "type"   : "numberbox",
-    "value"  : 0,
-    "label"  : "Cost",
-    "tooltip": "Command cost",
-    "group"  : "Command configuration"
-  },
-  "msg_permission": {
-    "type"   : "textbox",
-    "value"  : "You don't have enough permissions to use this command.",
-    "label"  : "Permissions",
-    "tooltip": "Message shown when someone tries to issue the command without enough permissions.",
-    "group"  : "Command messages"
-  },
-  "msg_cooldown": {
-    "type"   : "textbox",
-    "value"  : "This command is still on cooldown!",
-    "label"  : "Cooldown",
-    "tooltip": "Message shown when someone tries to issue the command but it is still on cooldown.",
-    "group"  : "Command messages"
-  },
-  "msg_user_cooldown": {
-    "type"   : "textbox",
-    "value"  : "You need to wait before using this command again.",
-    "label"  : "User Cooldown",
-    "tooltip": "Message shown when someone tries to issue the command while they are on cooldown.",
-    "group"  : "Command messages"
-  },
-  "msg_cost": {
-    "type"   : "textbox",
-    "value"  : "You don't have enough money to use this command.",
-    "label"  : "Cost",
-    "tooltip": "Message shown when someone tries to issue the command without enough points.",
-    "group"  : "Command messages"
-  },
-  "cmd_skip": {
-    "type"   : "textbox",
-    "value"  : "!ttskip",
-    "label"  : "Skip currently playing text command",
-    "tooltip": "Use this command to skip the currently playing text in case of a troll",
-    "group"  : "Moderator Configuration"
-  },
-  "cmd_ban": {
-    "type"   : "textbox",
-    "value"  : "!ttsban",
-    "label"  : "Add user to blacklist command",
-    "tooltip": "Use this command to add an user to the blacklist",
-    "group"  : "Moderator Configuration"
-  },
-  "cmd_unban": {
-    "type"   : "textbox",
-    "value"  : "!ttsunban",
-    "label"  : "Remove user from blacklist command",
-    "tooltip": "Use this command to remove an user from the blacklist",
-    "group"  : "Moderator Configuration"
-  },
-  "moderator_permission": {
-    "type": "dropdown",
-    "value": "Caster",
-    "items": ["Moderator","Editor","Caster"],
-    "label": "Moderator permission",
-    "tooltip": "Allow these users to blacklist/unblacklist people",
-    "group": "Moderator Configuration"
-  },
-  "lang": {
-    "type": "dropdown",
-    "label": "Language",
-    "value": "English (US) [en-US]",
-    "tooltip": "TTS Language",
-    "items": [
-      "Arabic [ar-XA]",
-      "Czech (Czech Republic) [cs-CZ]ar",
-      "Danish (Denmark) [da-DK]",
-      "Dutch (Netherlands) [nl-NL]",
-      "English (Australia) [en-AU]",
-      "English (India) [en-IN]",
-      "English (UK) [en-GB]",
-      "English (US) [en-US]",
-      "Filipino (Philippines) [fil-PH]",
-      "Finnish (Finland) [fi-FI]",
-      "French (Canada) [fr-CA]",
-      "French (France) [fr-FR]",
-      "German (Germany) [de-DE]",
-      "Greek (Greece) [el-GR]",
-      "Hindi (India) [hi-IN]",
-      "Hungarian (Hungary) [hu-HU]",
-      "Indonesian (Indonesia) [id-ID]",
-      "Italian (Italy) [it-IT]",
-      "Japanese (Japan) [ja-JP]",
-      "Korean (South Korea) [ko-KR]",
-      "Mandarin Chinese [cmn-CN]",
-      "Norwegian (Norway) [nb-NO]",
-      "Polish (Poland) [pl-PL]",
-      "Portuguese (Brazil) [pt-BR]",
-      "Portuguese (Portugal) [pt-PT]",
-      "Russian (Russia) [ru-RU]",
-      "Slovak (Slovakia) [sk-SK]",
-      "Spanish (Spain) [es-ES]",
-      "Spanish (Latin America) [es-MX]",
-      "Swedish (Sweden) [sv-SE]",
-      "Turkish (Turkey) [tr-TR]",
-      "Ukrainian (Ukraine) [uk-UA]",
-      "Vietnamese (Vietnam) [vi-VN]"
-    ],
-    "group": "TTS Configuration"
-  },
-  "pitch": {
-    "type": "slider",
-    "label": "% Pitch",
-    "value": 100,
-    "min": 50,
-    "max": 150,
-    "ticks": 5,
-    "tooltip": "Change default pitch of voice",
-    "group": "TTS Configuration"
-  },
-  "speed": {
-    "type": "slider",
-    "label": "% Speed",
-    "value": 100,
-    "min": 75,
-    "max": 250,
-    "ticks": 5,
-    "tooltip": "Change default speed of voice",
-    "group": "TTS Configuration"
-  },
-  "volume": {
-    "type": "slider",
-    "label": "Volume",
-    "value": 90,
-    "min": 15,
-    "max": 200,
-    "ticks": 5,
-    "tooltip": "Change volume",
-    "group": "TTS Configuration"
-  },
-  "length": {
-    "type": "slider",
-    "label": "Max length (seconds)",
-    "value": 5,
-    "min": 2,
-    "max": 60,
-    "ticks": 1,
-    "tooltip": "Limit the duration the TTS will be speaking.",
-    "group": "TTS Configuration"
-  }
+    "output_file": "config.json",
+    "donate": {
+        "type": "button",
+        "label": "☕  ☕  Buy the dev a coffee  ☕  ☕",
+        "tooltip": "Keep the development of free scripts going buying the developer a coffee!",
+        "function": "donate",
+        "wsevent": "",
+        "group": ""
+    },
+    "contact": {
+        "type": "button",
+        "label": "Want a custom script? Contact me!",
+        "tooltip": "Click here to contact the script's developer luissanchezdev",
+        "function": "open_contact_me",
+        "wsevent": "",
+        "group": ""
+    },
+    "emotes": {
+        "type": "button",
+        "label": "🎨 Twitch emotes, sub badges, channel points image and logos\nby Tecno_Diana",
+        "tooltip": "Click here to contact Tecno_Diana for Twitch emotes!",
+        "function": "open_contact_td",
+        "wsevent": "",
+        "group": ""
+    },
+    "open_readme": {
+        "type": "button",
+        "label": "View readme",
+        "tooltip": "Click here to view the script's documentation.",
+        "function": "open_readme",
+        "wsevent": "",
+        "group": ""
+    },
+    "read_all_text": {
+        "type": "checkbox",
+        "value": false,
+        "label": "Read ALL chat",
+        "tooltip": "Check this to read all chat disregarding the command.\nIF YOU ARE USING THIS FEATURE MAKE SURE TO SET A FAST SPEED SO THE CHATBOT CAN KEEP UP!",
+        "group": "General"
+    },
+    "clean_repeated_words": {
+        "type": "checkbox",
+        "value": true,
+        "label": "Clean repeated words/emotes",
+        "tooltip": "Prevent repeated words/emotes to be spoken and only speak them once\nExample: :Kappa::Kappa::Kappa::Kappa::Kappa::Kappa: -> :Kappa:",
+        "group": "General"
+    },
+    "clean_repeated_letters": {
+        "type": "checkbox",
+        "value": true,
+        "label": "Clean repeated letters",
+        "tooltip": "Prevent repeated letters to be spoken and only speak them once\nExample: noooooooo -> no",
+        "group": "General"
+    },
+    "clean_urls": {
+        "type": "checkbox",
+        "value": true,
+        "label": "Clean links",
+        "tooltip": "Prevent links to be spoken and say the replacement text instead",
+        "group": "General"
+    },
+    "url_replacement": {
+        "type": "textbox",
+        "value": "link removed",
+        "label": "Replace links with",
+        "tooltip": "If Clean links is checked, the links will be replaced with this text",
+        "group": "General"
+    },
+    "say_username": {
+        "type": "checkbox",
+        "value": true,
+        "label": "Say username before message",
+        "tooltip": "Check this to say the username before the message",
+        "group": "General"
+    },
+    "say_after_username": {
+        "type": "textbox",
+        "value": "says",
+        "label": "Say this after the username",
+        "tooltip": "Append this text to the username so the TTS makes more sense",
+        "group": "General"
+    },
+    "ignore_starting_with": {
+        "type": "textbox",
+        "value": "!",
+        "label": "Ignore messages starting with",
+        "tooltip": "Ignore messages starting with this character to prevent commands being spoken",
+        "group": "General"
+    },
+    "command": {
+        "type": "textbox",
+        "value": "!tts",
+        "label": "Command",
+        "tooltip": "Command for users to say something with TTS.",
+        "group": "Command configuration"
+    },
+    "permission": {
+        "type": "dropdown",
+        "value": "Everyone",
+        "items": [
+            "Everyone",
+            "Regular",
+            "Subscriber",
+            "Moderator",
+            "Editor"
+        ],
+        "label": "Permission level",
+        "tooltip": "Set the permission level for the command",
+        "group": "Command configuration"
+    },
+    "cooldown": {
+        "type": "numberbox",
+        "value": 0,
+        "label": "Global cooldown (seconds)",
+        "tooltip": "Cooldown applied globally.",
+        "group": "Command configuration"
+    },
+    "user_cooldown": {
+        "type": "numberbox",
+        "value": 0,
+        "label": "User cooldown (seconds)",
+        "tooltip": "Cooldown applied for each user.",
+        "group": "Command configuration"
+    },
+    "cost": {
+        "type": "numberbox",
+        "value": 0,
+        "label": "Cost",
+        "tooltip": "Command cost",
+        "group": "Command configuration"
+    },
+    "msg_permission": {
+        "type": "textbox",
+        "value": "You don't have enough permissions to use this command.",
+        "label": "Permissions",
+        "tooltip": "Message shown when someone tries to issue the command without enough permissions.",
+        "group": "Command messages"
+    },
+    "msg_cooldown": {
+        "type": "textbox",
+        "value": "This command is still on cooldown!",
+        "label": "Cooldown",
+        "tooltip": "Message shown when someone tries to issue the command but it is still on cooldown.",
+        "group": "Command messages"
+    },
+    "msg_user_cooldown": {
+        "type": "textbox",
+        "value": "You need to wait before using this command again.",
+        "label": "User Cooldown",
+        "tooltip": "Message shown when someone tries to issue the command while they are on cooldown.",
+        "group": "Command messages"
+    },
+    "msg_cost": {
+        "type": "textbox",
+        "value": "You don't have enough money to use this command.",
+        "label": "Cost",
+        "tooltip": "Message shown when someone tries to issue the command without enough points.",
+        "group": "Command messages"
+    },
+    "cmd_skip": {
+        "type": "textbox",
+        "value": "!ttskip",
+        "label": "Skip currently playing text command",
+        "tooltip": "Use this command to skip the currently playing text in case of a troll",
+        "group": "Moderator Configuration"
+    },
+    "cmd_ban": {
+        "type": "textbox",
+        "value": "!ttsban",
+        "label": "Add user to blacklist command",
+        "tooltip": "Use this command to add an user to the blacklist",
+        "group": "Moderator Configuration"
+    },
+    "cmd_unban": {
+        "type": "textbox",
+        "value": "!ttsunban",
+        "label": "Remove user from blacklist command",
+        "tooltip": "Use this command to remove an user from the blacklist",
+        "group": "Moderator Configuration"
+    },
+    "moderator_permission": {
+        "type": "dropdown",
+        "value": "Caster",
+        "items": [
+            "Moderator",
+            "Editor",
+            "Caster"
+        ],
+        "label": "Moderator permission",
+        "tooltip": "Allow these users to blacklist/unblacklist people",
+        "group": "Moderator Configuration"
+    },
+    "lang": {
+        "type": "dropdown",
+        "label": "Language",
+        "value": "English (US) [en-US]",
+        "tooltip": "TTS Language",
+        "items": [
+            "Arabic [ar-XA]",
+            "Czech (Czech Republic) [cs-CZ]ar",
+            "Danish (Denmark) [da-DK]",
+            "Dutch (Netherlands) [nl-NL]",
+            "English (Australia) [en-AU]",
+            "English (India) [en-IN]",
+            "English (UK) [en-GB]",
+            "English (US) [en-US]",
+            "Filipino (Philippines) [fil-PH]",
+            "Finnish (Finland) [fi-FI]",
+            "French (Canada) [fr-CA]",
+            "French (France) [fr-FR]",
+            "German (Germany) [de-DE]",
+            "Greek (Greece) [el-GR]",
+            "Hindi (India) [hi-IN]",
+            "Hungarian (Hungary) [hu-HU]",
+            "Indonesian (Indonesia) [id-ID]",
+            "Italian (Italy) [it-IT]",
+            "Japanese (Japan) [ja-JP]",
+            "Korean (South Korea) [ko-KR]",
+            "Mandarin Chinese [cmn-CN]",
+            "Norwegian (Norway) [nb-NO]",
+            "Polish (Poland) [pl-PL]",
+            "Portuguese (Brazil) [pt-BR]",
+            "Portuguese (Portugal) [pt-PT]",
+            "Russian (Russia) [ru-RU]",
+            "Slovak (Slovakia) [sk-SK]",
+            "Spanish (Spain) [es-ES]",
+            "Spanish (Latin America) [es-MX]",
+            "Swedish (Sweden) [sv-SE]",
+            "Turkish (Turkey) [tr-TR]",
+            "Ukrainian (Ukraine) [uk-UA]",
+            "Vietnamese (Vietnam) [vi-VN]"
+        ],
+        "group": "TTS Configuration"
+    },
+    "pitch": {
+        "type": "slider",
+        "label": "% Pitch",
+        "value": 100,
+        "min": 50,
+        "max": 150,
+        "ticks": 5,
+        "tooltip": "Change default pitch of voice",
+        "group": "TTS Configuration"
+    },
+    "speed": {
+        "type": "slider",
+        "label": "% Speed",
+        "value": 100,
+        "min": 75,
+        "max": 250,
+        "ticks": 5,
+        "tooltip": "Change default speed of voice",
+        "group": "TTS Configuration"
+    },
+    "volume": {
+        "type": "slider",
+        "label": "Volume",
+        "value": 90,
+        "min": 15,
+        "max": 200,
+        "ticks": 5,
+        "tooltip": "Change volume",
+        "group": "TTS Configuration"
+    },
+    "length": {
+        "type": "slider",
+        "label": "Max length (seconds)",
+        "value": 5,
+        "min": 2,
+        "max": 60,
+        "ticks": 1,
+        "tooltip": "Limit the duration the TTS will be speaking.",
+        "group": "TTS Configuration"
+    }
 }

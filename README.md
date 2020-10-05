@@ -38,7 +38,11 @@ Why is it better?
   * Cost - Set a cost for your command and spend Streamlabs Chatbot currency
 * Don't want to use commands? Enable ✔️*Read ALL chat* and read your entire chat!
 * _Who said that?_ You can enable the say username option to know who is talking!
-* Troll spammed? Just skip that message!
+* Multiple ways to prevent spam and long messages
+  * Ignore messages starting with any letter you want, for example the `!` usually used for commands
+  * Clean up repeated words and letters, super useful to prevent emotes spam
+  * Replace links with any text you want, such as `"link removed"`
+  * Troll spammed? Just skip that message!
 * Blacklist is included to block trolls and other bots such as *StreamElements*, *Nightbot*, etc. It includes:
   * A command to blacklist a user (Default) `!ttsban username`
   * A command to un-blacklist a user (Default) `!ttsunban username`
