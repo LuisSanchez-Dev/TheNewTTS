@@ -16,14 +16,6 @@
         "wsevent": "",
         "group": ""
     },
-    "emotes": {
-        "type": "button",
-        "label": "🎨 Twitch emotes, sub badges, channel points image and logos\nby Tecno_Diana",
-        "tooltip": "Click here to contact Tecno_Diana for Twitch emotes!",
-        "function": "open_contact_td",
-        "wsevent": "",
-        "group": ""
-    },
     "open_readme": {
         "type": "button",
         "label": "View readme",
@@ -101,6 +93,7 @@
         "items": [
             "Everyone",
             "Regular",
+            "VIP+",
             "Subscriber",
             "Moderator",
             "Editor"
